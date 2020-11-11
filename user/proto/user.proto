@@ -5,35 +5,27 @@ package user;
 option go_package = "proto;user";
 
 service User {
-	rpc Call(Request) returns (Response) {}
-	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
-	rpc PingPong(stream Ping) returns (stream Pong) {}
+	rpc Register(UserInformation) returns (Response) {}
 }
 
-message Message {
-	string say = 1;
+message UserInformation {
+	string uuid =1;
+	string username = 2;
+	string firstname = 3;
+	string lastname = 4;
+	string email = 5;
+	string password = 6;
+	string profile_picture_id = 7;
+	bool admin = 8;
+	bool seller = 9;	
 }
 
-message Request {
-	string name = 1;
+message Error {
+	int32 code =1;
+	string msg = 2;
 }
 
 message Response {
-	string msg = 1;
-}
-
-message StreamingRequest {
-	int64 count = 1;
-}
-
-message StreamingResponse {
-	int64 count = 1;
-}
-
-message Ping {
-	int64 stroke = 1;
-}
-
-message Pong {
-	int64 stroke = 1;
+	Error error = 1;
+	string success_response = 2;
 }
