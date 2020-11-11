@@ -37,6 +37,8 @@ message UserInformation {
 	string profile_picture_id = 7;
 	bool admin = 8;
 	bool seller = 9;	
+	string phone_number = 10;
+
 }
 
 message Error {
