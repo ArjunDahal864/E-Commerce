@@ -42,7 +42,11 @@ func NewUserEndpoints() []*api.Endpoint {
 // Client API for User service
 
 type UserService interface {
-	Register(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*Response, error)
+	Create(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*Response, error)
+	Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*ListResponse, error)
+	Update(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*UserInformation, error)
+	All(ctx context.Context, in *AllRequest, opts ...client.CallOption) (*ListResponse, error)
+	Validate(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*UserInformation, error)
 }
 
 type userService struct {
@@ -57,9 +61,49 @@ func NewUserService(name string, c client.Client) UserService {
 	}
 }
 
-func (c *userService) Register(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "User.Register", in)
+func (c *userService) Create(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "User.Create", in)
 	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userService) Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*ListResponse, error) {
+	req := c.c.NewRequest(c.name, "User.Search", in)
+	out := new(ListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userService) Update(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*UserInformation, error) {
+	req := c.c.NewRequest(c.name, "User.Update", in)
+	out := new(UserInformation)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userService) All(ctx context.Context, in *AllRequest, opts ...client.CallOption) (*ListResponse, error) {
+	req := c.c.NewRequest(c.name, "User.All", in)
+	out := new(ListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userService) Validate(ctx context.Context, in *UserInformation, opts ...client.CallOption) (*UserInformation, error) {
+	req := c.c.NewRequest(c.name, "User.Validate", in)
+	out := new(UserInformation)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -70,12 +114,20 @@ func (c *userService) Register(ctx context.Context, in *UserInformation, opts ..
 // Server API for User service
 
 type UserHandler interface {
-	Register(context.Context, *UserInformation, *Response) error
+	Create(context.Context, *UserInformation, *Response) error
+	Search(context.Context, *SearchRequest, *ListResponse) error
+	Update(context.Context, *UserInformation, *UserInformation) error
+	All(context.Context, *AllRequest, *ListResponse) error
+	Validate(context.Context, *UserInformation, *UserInformation) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
 	type user interface {
-		Register(ctx context.Context, in *UserInformation, out *Response) error
+		Create(ctx context.Context, in *UserInformation, out *Response) error
+		Search(ctx context.Context, in *SearchRequest, out *ListResponse) error
+		Update(ctx context.Context, in *UserInformation, out *UserInformation) error
+		All(ctx context.Context, in *AllRequest, out *ListResponse) error
+		Validate(ctx context.Context, in *UserInformation, out *UserInformation) error
 	}
 	type User struct {
 		user
@@ -88,6 +140,22 @@ type userHandler struct {
 	UserHandler
 }
 
-func (h *userHandler) Register(ctx context.Context, in *UserInformation, out *Response) error {
-	return h.UserHandler.Register(ctx, in, out)
+func (h *userHandler) Create(ctx context.Context, in *UserInformation, out *Response) error {
+	return h.UserHandler.Create(ctx, in, out)
+}
+
+func (h *userHandler) Search(ctx context.Context, in *SearchRequest, out *ListResponse) error {
+	return h.UserHandler.Search(ctx, in, out)
+}
+
+func (h *userHandler) Update(ctx context.Context, in *UserInformation, out *UserInformation) error {
+	return h.UserHandler.Update(ctx, in, out)
+}
+
+func (h *userHandler) All(ctx context.Context, in *AllRequest, out *ListResponse) error {
+	return h.UserHandler.All(ctx, in, out)
+}
+
+func (h *userHandler) Validate(ctx context.Context, in *UserInformation, out *UserInformation) error {
+	return h.UserHandler.Validate(ctx, in, out)
 }

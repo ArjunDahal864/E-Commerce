@@ -5,7 +5,26 @@ package user;
 option go_package = "proto;user";
 
 service User {
-	rpc Register(UserInformation) returns (Response) {}
+	rpc Create(UserInformation) returns (Response) {}
+	rpc Search(SearchRequest) returns (ListResponse){}
+	rpc Update(UserInformation) returns (UserInformation){}
+	rpc All (AllRequest) returns (ListResponse){}
+	rpc Validate (UserInformation) returns (UserInformation){}
+}
+
+
+message AllRequest {}
+
+message SearchRequest {
+	string query = 1;
+	int32 limit = 2;
+}
+
+message ListResponse{
+	repeated string uuids =1;
+	repeated string firstnames = 2;
+	repeated string lastnames = 3;
+	repeated string profile_picture_ids = 4;
 }
 
 message UserInformation {
